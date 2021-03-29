@@ -12,19 +12,11 @@
 		52FB3721260E1FD800F74B75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 52FB3720260E1FD800F74B75 /* Assets.xcassets */; };
 		52FB3724260E1FD800F74B75 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52FB3722260E1FD800F74B75 /* Main.storyboard */; };
 		52FB3730260E1FD800F74B75 /* SegmentedControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB372F260E1FD800F74B75 /* SegmentedControlTests.swift */; };
-		52FB373B260E1FD800F74B75 /* SegmentedControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB373A260E1FD800F74B75 /* SegmentedControlUITests.swift */; };
 		52FB374C260E200100F74B75 /* SegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB374B260E200100F74B75 /* SegmentedControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		52FB372C260E1FD800F74B75 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 52FB3711260E1FD700F74B75 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 52FB3718260E1FD700F74B75;
-			remoteInfo = SegmentedControl;
-		};
-		52FB3737260E1FD800F74B75 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 52FB3711260E1FD700F74B75 /* Project object */;
 			proxyType = 1;
@@ -44,9 +36,6 @@
 		52FB372B260E1FD800F74B75 /* SegmentedControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SegmentedControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		52FB372F260E1FD800F74B75 /* SegmentedControlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlTests.swift; sourceTree = "<group>"; };
 		52FB3731260E1FD800F74B75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		52FB3736260E1FD800F74B75 /* SegmentedControlUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SegmentedControlUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		52FB373A260E1FD800F74B75 /* SegmentedControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlUITests.swift; sourceTree = "<group>"; };
-		52FB373C260E1FD800F74B75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52FB374B260E200100F74B75 /* SegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -65,13 +54,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		52FB3733260E1FD800F74B75 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -80,7 +62,6 @@
 			children = (
 				52FB371B260E1FD700F74B75 /* SegmentedControl */,
 				52FB372E260E1FD800F74B75 /* SegmentedControlTests */,
-				52FB3739260E1FD800F74B75 /* SegmentedControlUITests */,
 				52FB371A260E1FD700F74B75 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,7 +71,6 @@
 			children = (
 				52FB3719260E1FD700F74B75 /* SegmentedControl.app */,
 				52FB372B260E1FD800F74B75 /* SegmentedControlTests.xctest */,
-				52FB3736260E1FD800F74B75 /* SegmentedControlUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,10 +81,7 @@
 				52FB371C260E1FD700F74B75 /* AppDelegate.swift */,
 				52FB374B260E200100F74B75 /* SegmentedControl.swift */,
 				52FB371E260E1FD700F74B75 /* ViewController.swift */,
-				52FB3720260E1FD800F74B75 /* Assets.xcassets */,
-				52FB3722260E1FD800F74B75 /* Main.storyboard */,
-				52FB3725260E1FD800F74B75 /* Info.plist */,
-				52FB3726260E1FD800F74B75 /* SegmentedControl.entitlements */,
+				52FB3754260E205D00F74B75 /* Supporting Files */,
 			);
 			path = SegmentedControl;
 			sourceTree = "<group>";
@@ -118,13 +95,15 @@
 			path = SegmentedControlTests;
 			sourceTree = "<group>";
 		};
-		52FB3739260E1FD800F74B75 /* SegmentedControlUITests */ = {
+		52FB3754260E205D00F74B75 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				52FB373A260E1FD800F74B75 /* SegmentedControlUITests.swift */,
-				52FB373C260E1FD800F74B75 /* Info.plist */,
+				52FB3720260E1FD800F74B75 /* Assets.xcassets */,
+				52FB3725260E1FD800F74B75 /* Info.plist */,
+				52FB3722260E1FD800F74B75 /* Main.storyboard */,
+				52FB3726260E1FD800F74B75 /* SegmentedControl.entitlements */,
 			);
-			path = SegmentedControlUITests;
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -165,24 +144,6 @@
 			productReference = 52FB372B260E1FD800F74B75 /* SegmentedControlTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		52FB3735260E1FD800F74B75 /* SegmentedControlUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 52FB3745260E1FD800F74B75 /* Build configuration list for PBXNativeTarget "SegmentedControlUITests" */;
-			buildPhases = (
-				52FB3732260E1FD800F74B75 /* Sources */,
-				52FB3733260E1FD800F74B75 /* Frameworks */,
-				52FB3734260E1FD800F74B75 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				52FB3738260E1FD800F74B75 /* PBXTargetDependency */,
-			);
-			name = SegmentedControlUITests;
-			productName = SegmentedControlUITests;
-			productReference = 52FB3736260E1FD800F74B75 /* SegmentedControlUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -196,10 +157,6 @@
 						CreatedOnToolsVersion = 12.4;
 					};
 					52FB372A260E1FD800F74B75 = {
-						CreatedOnToolsVersion = 12.4;
-						TestTargetID = 52FB3718260E1FD700F74B75;
-					};
-					52FB3735260E1FD800F74B75 = {
 						CreatedOnToolsVersion = 12.4;
 						TestTargetID = 52FB3718260E1FD700F74B75;
 					};
@@ -220,7 +177,6 @@
 			targets = (
 				52FB3718260E1FD700F74B75 /* SegmentedControl */,
 				52FB372A260E1FD800F74B75 /* SegmentedControlTests */,
-				52FB3735260E1FD800F74B75 /* SegmentedControlUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -236,13 +192,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		52FB3729260E1FD800F74B75 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		52FB3734260E1FD800F74B75 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -270,14 +219,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		52FB3732260E1FD800F74B75 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				52FB373B260E1FD800F74B75 /* SegmentedControlUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -285,11 +226,6 @@
 			isa = PBXTargetDependency;
 			target = 52FB3718260E1FD700F74B75 /* SegmentedControl */;
 			targetProxy = 52FB372C260E1FD800F74B75 /* PBXContainerItemProxy */;
-		};
-		52FB3738260E1FD800F74B75 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 52FB3718260E1FD700F74B75 /* SegmentedControl */;
-			targetProxy = 52FB3737260E1FD800F74B75 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -506,46 +442,6 @@
 			};
 			name = Release;
 		};
-		52FB3746260E1FD800F74B75 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = AMC88E6FEN;
-				INFOPLIST_FILE = SegmentedControlUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.raycast.SegmentedControlUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = SegmentedControl;
-			};
-			name = Debug;
-		};
-		52FB3747260E1FD800F74B75 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = AMC88E6FEN;
-				INFOPLIST_FILE = SegmentedControlUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.raycast.SegmentedControlUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = SegmentedControl;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -572,15 +468,6 @@
 			buildConfigurations = (
 				52FB3743260E1FD800F74B75 /* Debug */,
 				52FB3744260E1FD800F74B75 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		52FB3745260E1FD800F74B75 /* Build configuration list for PBXNativeTarget "SegmentedControlUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				52FB3746260E1FD800F74B75 /* Debug */,
-				52FB3747260E1FD800F74B75 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
