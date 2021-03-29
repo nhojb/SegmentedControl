@@ -13,6 +13,7 @@
 		52FB3724260E1FD800F74B75 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 52FB3722260E1FD800F74B75 /* Main.storyboard */; };
 		52FB3730260E1FD800F74B75 /* SegmentedControlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB372F260E1FD800F74B75 /* SegmentedControlTests.swift */; };
 		52FB373B260E1FD800F74B75 /* SegmentedControlUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB373A260E1FD800F74B75 /* SegmentedControlUITests.swift */; };
+		52FB374C260E200100F74B75 /* SegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52FB374B260E200100F74B75 /* SegmentedControl.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		52FB3736260E1FD800F74B75 /* SegmentedControlUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SegmentedControlUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		52FB373A260E1FD800F74B75 /* SegmentedControlUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlUITests.swift; sourceTree = "<group>"; };
 		52FB373C260E1FD800F74B75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		52FB374B260E200100F74B75 /* SegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControl.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 			isa = PBXGroup;
 			children = (
 				52FB371C260E1FD700F74B75 /* AppDelegate.swift */,
+				52FB374B260E200100F74B75 /* SegmentedControl.swift */,
 				52FB371E260E1FD700F74B75 /* ViewController.swift */,
 				52FB3720260E1FD800F74B75 /* Assets.xcassets */,
 				52FB3722260E1FD800F74B75 /* Main.storyboard */,
@@ -254,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				52FB371F260E1FD700F74B75 /* ViewController.swift in Sources */,
+				52FB374C260E200100F74B75 /* SegmentedControl.swift in Sources */,
 				52FB371D260E1FD700F74B75 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
