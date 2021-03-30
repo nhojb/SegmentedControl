@@ -15,6 +15,8 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var tintedControl: SegmentedControl?
 
+    @IBOutlet weak var imageControl: SegmentedControl?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -31,14 +33,18 @@ class ViewController: NSViewController {
         tintedControl?.insertSegment(title: "Second", at: 1)
         tintedControl?.insertSegment(title: "Third", at: 2)
 
+        imageControl?.insertSegment(image: NSImage(named: NSImage.homeTemplateName)!, at: 0)
+        imageControl?.insertSegment(image: NSImage(named: NSImage.iconViewTemplateName)!, at: 1)
+        imageControl?.insertSegment(image: NSImage(named: NSImage.lockLockedTemplateName)!, at: 2)
+        imageControl?.insertSegment(image: NSImage(named: NSImage.folderName)!, at: 3)
     }
 
     @IBAction func toggleSelectedIndex(_ sender: Any?) {
-        let selectedIndex = proportionalControl?.selectedSegmentIndex ?? 0
-        let count = proportionalControl?.count ?? 0
+        let selectedIndex = defaultControl?.selectedSegmentIndex ?? 0
+        let count = defaultControl?.count ?? 0
         let nextIndex = selectedIndex < count - 1 ? selectedIndex + 1 : 0
 
-        proportionalControl?.setSelectedSegmentIndex(nextIndex, animated: true)
+        defaultControl?.setSelectedSegmentIndex(nextIndex, animated: true)
     }
 
 }

@@ -187,8 +187,19 @@ public class SegmentedControl: NSControl {
     }
 
     public func insertSegment(title: String, at idx: Int) {
+        insertSegment(at: idx).title = title
+    }
+
+    public func insertSegment(image: NSImage, at idx: Int) {
+        insertSegment(at: idx).image = image
+    }
+
+    private func insertSegment(at idx: Int) -> SegmentLayer {
+        if idx < count {
+            removeSegment(at: idx)
+        }
+
         let segment = SegmentLayer()
-        segment.title = title
         segment.isSelected = self.count == 0
         segmentContainer.insertSublayer(segment, at: UInt32(idx))
 
@@ -197,6 +208,8 @@ public class SegmentedControl: NSControl {
 
         updateSegments()
         updateSeparators()
+
+        return segment
     }
 
     public func removeSegment(at idx: Int) {
@@ -525,6 +538,12 @@ extension SegmentedControl {
             }
         }
 
+        private let imageLayer: CALayer = {
+            let layer = CALayer()
+            layer.contentsGravity = .resizeAspect
+            return layer
+        }()
+
         private let textLayer: TextLayer = {
             let layer = TextLayer()
             layer.fontSize = NSFont.systemFontSize
@@ -566,10 +585,7 @@ extension SegmentedControl {
         }
 
         private func commonInit() {
-            // TODO: scale to fit image...
-            contentsGravity = .resizeAspect
-            contentsRect = CGRect(x: 0.1, y: 0.1, width: 0.8, height: 0.8)
-
+            addSublayer(imageLayer)
             addSublayer(textLayer)
             updateAppearance()
         }
@@ -578,10 +594,14 @@ extension SegmentedControl {
             needsAppearanceUpdate = false
 
             if let image = self.image {
-                contents = image
+                imageLayer.contents = image
+                imageLayer.isHidden = false
                 textLayer.isHidden = true
+
+                imageLayer.opacity = isHighlighted ? 0.5 : 1.0
             } else {
-                contents = nil
+                imageLayer.contents = nil
+                imageLayer.isHidden = true
                 textLayer.isHidden = false
                 textLayer.string = self.title
 
@@ -623,6 +643,18 @@ extension SegmentedControl {
                 updateAppearance()
             }
 
+            if !imageLayer.isHidden {
+                layoutImageLayer()
+            } else {
+                layoutTextLayer()
+            }
+        }
+
+        private func layoutImageLayer() {
+            imageLayer.frame = bounds.insetBy(dx: 0, dy: Metrics.edgeInset * 2)
+        }
+
+        private func layoutTextLayer() {
             guard let font = textLayer.font,
                   let string = textLayer.string as? NSString,
                   string.length > 0 else {
@@ -643,6 +675,7 @@ extension SegmentedControl {
 
         override var contentsScale: CGFloat {
             didSet {
+                imageLayer.contentsScale = contentsScale
                 textLayer.contentsScale = contentsScale
             }
         }
@@ -651,6 +684,8 @@ extension SegmentedControl {
             var size = CGSize(width: 0, height: superlayer?.bounds.size.height ?? 0)
             if (fixedWidth > 0) {
                 size.width = fixedWidth
+            } else if image != nil {
+                size = bounds.size
             } else if let title = self.title,
                       let font = textLayer.font {
                 size.width = title.size(withAttributes: [.font: font]).width + Metrics.segmentPadding * 2

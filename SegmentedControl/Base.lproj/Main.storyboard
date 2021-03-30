@@ -748,7 +748,7 @@
                                 </textFieldCell>
                             </textField>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K8j-Sd-BRT" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="153" y="169" width="259" height="24"/>
+                                <rect key="frame" x="153" y="169" width="307" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="apportionsSegmentWidthsByContent" value="YES"/>
@@ -794,10 +794,24 @@
                                     </segments>
                                 </segmentedCell>
                             </segmentedControl>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrX-yY-o8T" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
+                                <rect key="frame" x="153" y="47" width="175" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mhD-Xx-Krx">
+                                <rect key="frame" x="56" y="51" width="48" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Images" id="1ht-rH-GBg">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="defaultControl" destination="1vc-Kg-2BE" id="PeO-ny-pWQ"/>
+                        <outlet property="imageControl" destination="KrX-yY-o8T" id="I7E-gp-JDs"/>
                         <outlet property="proportionalControl" destination="K8j-Sd-BRT" id="cJe-MV-IN7"/>
                         <outlet property="tintedControl" destination="zjd-O7-EQM" id="30w-e4-X52"/>
                     </connections>
