@@ -71,7 +71,8 @@ public class SegmentedControl: NSControl {
         }
     }
 
-    public var isMomentary = false {
+    @IBInspectable
+    public var isMomentary: Bool = false {
         didSet {
             for segment in segments {
                 segment.isMomentary = isMomentary
@@ -82,7 +83,12 @@ public class SegmentedControl: NSControl {
     }
 
     // Indicates whether the control attempts to adjust segment widths based on their content widths.
-    //public var apportionsSegmentWidthsByContent = false
+    @IBInspectable
+    public var apportionsSegmentWidthsByContent: Bool = false {
+        didSet {
+            needsLayout = true
+        }
+    }
 
     private var segments: [SegmentLayer] {
         return segmentContainer.sublayers as? [SegmentLayer] ?? []
@@ -198,11 +204,11 @@ public class SegmentedControl: NSControl {
     }
 
     public func setWidth(_ width: CGFloat, forSegment idx: Int) {
-        segments[idx].width = width
+        segments[idx].fixedWidth = width
     }
 
     public func widthForSegment(_ idx: Int) -> CGFloat {
-        return segments[idx].width
+        return segments[idx].fixedWidth
     }
 
     public override func viewDidChangeBackingProperties() {
@@ -256,37 +262,50 @@ public class SegmentedControl: NSControl {
         // If any segments have fixed widths, then reduce "flexible" width by that amount:
         var fixedCount: Int = 0
         var fixedWidth: CGFloat = 0
+        var contentWidth: CGFloat = 0
 
         let segments = self.segments
 
         for segment in segments {
-            if segment.width > 0 {
-                fixedWidth += segment.width
+            if segment.fixedWidth > 0 {
+                fixedWidth += segment.fixedWidth
                 fixedCount += 1
+            } else {
+                contentWidth += segment.preferredFrameSize().width
             }
         }
 
         var contentBounds = bounds.insetBy(dx: Metrics.edgeInset, dy: Metrics.edgeInset)
         contentBounds.size.width -= Metrics.segmentPadding * CGFloat(count - 1)
-
-        let flexibleWidth = max(contentBounds.size.width - fixedWidth, 0)
         var segmentWidth: CGFloat = 0
 
-        // TODO: Support apportionsSegmentWidthsByContent
-
         if fixedCount < count {
-            segmentWidth = flexibleWidth / CGFloat(count - fixedCount)
+            let nonFixedCount = count - fixedCount
+            if apportionsSegmentWidthsByContent {
+                // Increase section width if segments do not take up remaining flexibleWidth.
+                // This may be negative if available width will not accommodate all content.
+                let unusedWidth = contentBounds.size.width - contentWidth - fixedWidth
+                segmentWidth = unusedWidth / CGFloat(nonFixedCount)
+            } else {
+                let flexibleWidth = contentBounds.size.width - fixedWidth
+                segmentWidth = max(0, flexibleWidth / CGFloat(nonFixedCount))
+            }
         }
 
         var frame = contentBounds;
         let separators = self.separators
 
         for (idx, segment) in segments.enumerated() {
-            frame.size.width = segment.width > 0 ? segment.width : segmentWidth
+            if segment.fixedWidth > 0 {
+                frame.size.width = segment.fixedWidth
+            } else if apportionsSegmentWidthsByContent {
+                // Any unused width is added via segmentWidth:
+                frame.size.width = segment.preferredFrameSize().width + segmentWidth
+            } else {
+                frame.size.width = segmentWidth
+            }
             segment.frame = frame.rounded
-            //print("segment.frame: \(segment.frame)")
-            separators[idx].frame = separatorFrame(for: frame, padding: Metrics.segmentPadding).rounded
-            //print("separator.frame: \(separators[idx].frame)")
+            separators[idx].frame = separatorFrame(for: frame).rounded
 
             frame.origin.x = frame.maxX + Metrics.segmentPadding
         }
@@ -301,10 +320,10 @@ public class SegmentedControl: NSControl {
         }
     }
 
-    private func separatorFrame(for segmentFrame: CGRect, padding: CGFloat) -> CGRect {
+    private func separatorFrame(for segmentFrame: CGRect) -> CGRect {
         var frame = segmentFrame
         frame.origin.x = frame.maxX
-        frame.size.width = padding
+        frame.size.width = Metrics.segmentPadding
         return frame
     }
 
@@ -361,7 +380,7 @@ extension SegmentedControl {
         /**
          * Segment is auto-sized if width is zero. Otherwise the width is fixed.
          */
-        var width: CGFloat = 0.0
+        var fixedWidth: CGFloat = 0.0
 
         private let textLayer: CATextLayer = {
             let layer = CATextLayer()
@@ -418,7 +437,7 @@ extension SegmentedControl {
         override func layoutSublayers() {
             super.layoutSublayers()
 
-            guard let font = textLayer.font as? NSFont,
+            guard let font = textLayer.font,
                   let string = textLayer.string as? NSString,
                   string.length > 0 else {
                 return
@@ -438,12 +457,16 @@ extension SegmentedControl {
             }
         }
 
-        // override func preferredFrameSize() -> CGSize {
-        //     var size = CGSize(width: 0, height: superlayer?.bounds.size.height ?? 0)
-        //     if (width > 0) {
-        //         size.width = width
-        //     }
-        // }
+        override func preferredFrameSize() -> CGSize {
+            var size = CGSize(width: 0, height: superlayer?.bounds.size.height ?? 0)
+            if (fixedWidth > 0) {
+                size.width = fixedWidth
+            } else if let title = self.title,
+                      let font = textLayer.font {
+                size.width = title.size(withAttributes: [.font: font]).width + Metrics.segmentPadding * 2
+            }
+            return size
+        }
 
     }
 
@@ -502,71 +525,3 @@ extension CGRect {
     }
 
 }
-
-/*
-extension SegmentedControl {
-
-    private class SegmentContainerLayoutManager: NSObject, CALayoutManager {
-
-        weak var control: SegmentedControl?
-
-        init(control: SegmentedControl) {
-            self.control = control
-        }
-
-        func layoutSublayers(of layer: CALayer) {
-            print("layoutSublayers of: \(layer)")
-
-            guard let control = self.control,
-                  layer == control.segmentContainer else {
-                return
-            }
-
-            // If any segments have fixed widths, then reduce "flexible" width by that amount:
-            var fixedCount: Int = 0
-            var fixedWidth: CGFloat = 0
-
-            for segment in control.segments {
-                if segment.width > 0 {
-                    fixedWidth += segment.width
-                    fixedCount += 1
-                }
-            }
-
-            let count = control.count
-            var contentBounds = control.bounds.insetBy(dx: Metrics.edgeInset, dy: Metrics.edgeInset)
-            contentBounds.size.width -= Metrics.segmentPadding * CGFloat(count - 1)
-
-            let flexibleWidth = max(contentBounds.size.width - fixedWidth, 0)
-            var segmentWidth: CGFloat = 0
-
-            if fixedCount < count {
-                segmentWidth = flexibleWidth / CGFloat(count - fixedCount)
-            }
-
-            var frame = contentBounds;
-            for segment in control.segments {
-                frame.size.width = segment.width > 0 ? segment.width : segmentWidth
-                segment.frame = frame
-                print("segment.frame: \(frame)")
-                frame.origin.x += frame.size.width + Metrics.segmentPadding
-            }
-        }
-
-        // func preferredSize(of layer: CALayer) -> CGSize {
-        //     guard let segment = layer as? SegmentedControl.SegmentLayer else {
-        //         return layer.bounds.size
-        //     }
-
-        //     var size = CGSize(width: 0, height: segment.superlayer?.bounds.height ?? 0)
-        //     if segment.width > 0 {
-        //         size.width = segment.width
-        //     } else {
-        //         // fixedWidth...
-        //     }
-        // }
-
-    }
-
-}
-*/
