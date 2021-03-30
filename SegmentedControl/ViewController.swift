@@ -19,12 +19,13 @@ class ViewController: NSViewController {
         segmentedControl?.insertSegment(title: "Third", at: 2)
     }
 
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
-    }
+    @IBAction func toggleSelectedIndex(_ sender: Any?) {
+        let selectedIndex = self.segmentedControl?.selectedSegmentIndex ?? 0
+        let count = self.segmentedControl?.count ?? 0
+        let nextIndex = selectedIndex < count - 1 ? selectedIndex + 1 : 0
 
+        self.segmentedControl?.setSelectedSegmentIndex(nextIndex, animated: true)
+    }
 
 }
 

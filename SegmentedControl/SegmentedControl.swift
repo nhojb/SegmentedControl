@@ -46,6 +46,7 @@ public class SegmentedControl: NSControl {
 
     /**
      * Get or set the selected segment index.
+     * Updates to selectedSegmentIndex are always animated, unless explicitly disabled.
      * Returns nil if no segment is selected.
      */
     public var selectedSegmentIndex: Int? {
@@ -53,12 +54,17 @@ public class SegmentedControl: NSControl {
             segments.firstIndex { $0.isSelected }
         }
         set {
-            for idx in 0..<segments.count {
-                segments[idx].isSelected = (idx == newValue)
+            CATransaction.withAnimation(duration: 0.3, timing: .easeOut) {
+                for idx in 0..<segments.count {
+                    segments[idx].isSelected = (idx == newValue)
+                }
+                updateSeparators()
+                layoutSelectionHighlight()
             }
         }
     }
 
+    @IBInspectable
     public var tintColor: NSColor? {
         didSet {
             updateSelectionHighlightColor()
@@ -126,6 +132,20 @@ public class SegmentedControl: NSControl {
         layer?.addSublayer(selectionHighlight)
         layer?.addSublayer(segmentContainer)
         layer?.addSublayer(separatorContainer)
+    }
+
+    public func setSelectedSegmentIndex(_ idx: Int, animated: Bool) {
+        guard idx != self.selectedSegmentIndex else {
+            return
+        }
+
+        if !animated {
+            CATransaction.withoutAnimation {
+                self.selectedSegmentIndex = idx
+            }
+        } else {
+            self.selectedSegmentIndex = idx
+        }
     }
 
     public func insertSegment(title: String, at idx: Int) {
@@ -213,13 +233,7 @@ public class SegmentedControl: NSControl {
         segmentContainer.frame = bounds
 
         layoutSegments()
-
-        if let idx = selectedSegmentIndex {
-            selectionHighlight.isHidden = false
-            selectionHighlight.frame = segments[idx].frame
-        } else {
-            selectionHighlight.isHidden = true
-        }
+        layoutSelectionHighlight()
     }
 
     private func layoutSegments() {
@@ -265,6 +279,15 @@ public class SegmentedControl: NSControl {
             //print("separator.frame: \(separators[idx].frame)")
 
             frame.origin.x = frame.maxX + Metrics.segmentPadding
+        }
+    }
+
+    private func layoutSelectionHighlight() {
+        if let idx = selectedSegmentIndex {
+            selectionHighlight.isHidden = false
+            selectionHighlight.frame = segments[idx].frame
+        } else {
+            selectionHighlight.isHidden = true
         }
     }
 
