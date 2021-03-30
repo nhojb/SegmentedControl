@@ -122,7 +122,14 @@ public class SegmentedControl: NSControl {
         return layer
     }()
 
-    private var isDraggingSelectedSegment = false
+    private var isDraggingSelectedSegment = false {
+        didSet {
+            layoutSelectionHighlight()
+            for segment in segments {
+                segment.isInset = isDraggingSelectedSegment
+            }
+        }
+    }
 
     public override var intrinsicContentSize: NSSize {
         guard count > 0 else {
@@ -375,7 +382,12 @@ public class SegmentedControl: NSControl {
     private func layoutSelectionHighlight() {
         if let idx = selectedSegmentIndex, !isMomentary {
             selectionHighlight.isHidden = false
-            selectionHighlight.frame = segments[idx].frame
+            let frame = segments[idx].frame
+            if isDraggingSelectedSegment {
+                selectionHighlight.frame = frame.insetBy(dx: Metrics.edgeInset, dy: Metrics.edgeInset)
+            } else {
+                selectionHighlight.frame = frame
+            }
         } else {
             selectionHighlight.isHidden = true
         }
@@ -443,7 +455,7 @@ extension SegmentedControl {
         var title: String? {
             didSet {
                 if title != oldValue {
-                    updateAppearance()
+                    needsAppearanceUpdate = true
                 }
             }
         }
@@ -451,7 +463,7 @@ extension SegmentedControl {
         var image: NSImage? {
             didSet {
                 if image != oldValue {
-                    updateAppearance()
+                    needsAppearanceUpdate = true
                 }
             }
         }
@@ -459,7 +471,7 @@ extension SegmentedControl {
         var isHighlighted = false {
             didSet {
                 if isHighlighted != oldValue {
-                    updateAppearance()
+                    needsAppearanceUpdate = true
                 }
             }
         }
@@ -467,7 +479,7 @@ extension SegmentedControl {
         var isSelected = false {
             didSet {
                 if isSelected != oldValue {
-                    updateAppearance()
+                    needsAppearanceUpdate = true
                 }
             }
         }
@@ -475,7 +487,19 @@ extension SegmentedControl {
         var isMomentary = false {
             didSet {
                 if isMomentary != oldValue {
-                    updateAppearance()
+                    needsAppearanceUpdate = true
+                }
+            }
+        }
+
+        /**
+         * If true then the segment is drawn slightly inset.
+         * Used during dragging of the selected segment.
+         */
+        var isInset = false {
+            didSet {
+                if isInset != oldValue {
+                    needsAppearanceUpdate = true
                 }
             }
         }
@@ -483,7 +507,7 @@ extension SegmentedControl {
         var tintColor: NSColor? {
             didSet {
                 if tintColor != oldValue {
-                    updateAppearance()
+                    needsAppearanceUpdate = true
                 }
             }
         }
@@ -501,14 +525,17 @@ extension SegmentedControl {
             return layer
         }()
 
+        private var needsAppearanceUpdate = false {
+            didSet {
+                if needsAppearanceUpdate {
+                    setNeedsLayout()
+                }
+            }
+        }
+
         override init() {
             super.init()
             commonInit()
-        }
-
-        override init(layer: Any) {
-            super.init(layer: layer)
-            // TODO: Copy layer's properties (for presentation layer).
         }
 
         required init?(coder aDecoder: NSCoder) {
@@ -526,6 +553,8 @@ extension SegmentedControl {
         }
 
         func updateAppearance() {
+            needsAppearanceUpdate = false
+
             if let image = self.image {
                 contents = image
                 textLayer.isHidden = true
@@ -536,13 +565,19 @@ extension SegmentedControl {
 
                 var foregroundColor: NSColor?
 
+                // Adjusting the fontSize when the segment is "inset", gives a nice little "push" effect.
+                // Note that there is no need to update the textLayer's fontSize property.
+                var fontSize = NSFont.systemFontSize
+                if isInset && isSelected {
+                    fontSize -= 0.5
+                }
+
                 if isSelected && !isMomentary {
-                    textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize, weight: .medium)
+                    textLayer.font = NSFont.systemFont(ofSize: fontSize, weight: .medium)
+                    // Text color should contrast with our tintColor (if any).
                     foregroundColor = tintColor?.contrastingTextColor
                 } else {
-                    // Could use labelFont(ofSize:) here, but for consistency with the bold style,
-                    // we are using systemFont(ofSize:).
-                    textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize)
+                    textLayer.font = NSFont.systemFont(ofSize: fontSize)
                 }
 
                 if foregroundColor == nil {
@@ -559,6 +594,10 @@ extension SegmentedControl {
 
         override func layoutSublayers() {
             super.layoutSublayers()
+
+            if needsAppearanceUpdate {
+                updateAppearance()
+            }
 
             guard let font = textLayer.font,
                   let string = textLayer.string as? NSString,
@@ -601,11 +640,6 @@ extension SegmentedControl {
 
         override init() {
             super.init()
-            commonInit()
-        }
-
-        override init(layer: Any) {
-            super.init(layer: layer)
             commonInit()
         }
 

@@ -712,7 +712,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HBz-fp-yRi">
-                                <rect key="frame" x="151" y="309" width="179" height="24"/>
+                                <rect key="frame" x="151" y="335" width="179" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="NhP-0I-B9b">
                                     <font key="font" metaFont="system"/>
@@ -748,7 +748,7 @@
                                 </textFieldCell>
                             </textField>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K8j-Sd-BRT" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="153" y="169" width="175" height="24"/>
+                                <rect key="frame" x="153" y="169" width="259" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="apportionsSegmentWidthsByContent" value="YES"/>
@@ -781,6 +781,19 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vFL-4r-7ce">
+                                <rect key="frame" x="151" y="292" width="263" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectOne" id="gq7-6M-V8o">
+                                    <font key="font" metaFont="system"/>
+                                    <segments>
+                                        <segment label="First" width="47"/>
+                                        <segment label="Second" width="47" selected="YES" tag="1"/>
+                                        <segment label="Third" width="46"/>
+                                        <segment label="Fourth Segment"/>
+                                    </segments>
+                                </segmentedCell>
+                            </segmentedControl>
                         </subviews>
                     </view>
                     <connections>
