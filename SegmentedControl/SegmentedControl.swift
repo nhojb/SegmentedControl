@@ -54,6 +54,10 @@ public class SegmentedControl: NSControl {
             segments.firstIndex { $0.isSelected }
         }
         set {
+            guard newValue != selectedSegmentIndex else {
+                return
+            }
+
             CATransaction.withAnimation(duration: 0.3, timing: .easeOut) {
                 for idx in 0..<segments.count {
                     segments[idx].isSelected = (idx == newValue)
@@ -67,17 +71,21 @@ public class SegmentedControl: NSControl {
     @IBInspectable
     public var tintColor: NSColor? {
         didSet {
-            updateSegments()
-            updateSelectionHighlightColor()
+            if tintColor != oldValue {
+                updateSegments()
+                updateSelectionHighlightColor()
+            }
         }
     }
 
     @IBInspectable
     public var isMomentary: Bool = false {
         didSet {
-            updateSegments()
-            updateSeparators()
-            layoutSelectionHighlight()
+            if isMomentary != oldValue {
+                updateSegments()
+                updateSeparators()
+                layoutSelectionHighlight()
+            }
         }
     }
 
@@ -113,6 +121,8 @@ public class SegmentedControl: NSControl {
         layer.shadowOffset = CGSize(width: 0, height: -3)
         return layer
     }()
+
+    private var isDraggingSelectedSegment = false
 
     public override var intrinsicContentSize: NSSize {
         guard count > 0 else {
@@ -230,6 +240,50 @@ public class SegmentedControl: NSControl {
         segmentContainer.sublayers?.forEach {
             $0.contentsScale = contentsScale
         }
+    }
+
+    public override func mouseDown(with event: NSEvent) {
+        let location = self.convert(event.locationInWindow, from: nil)
+
+        guard let idx = segmentIndex(at: location) else {
+            return
+        }
+
+        if idx == selectedSegmentIndex {
+            isDraggingSelectedSegment = true
+        } else {
+            highlightSegment(at: idx)
+        }
+    }
+
+    public override func mouseDragged(with event: NSEvent) {
+        let location = self.convert(event.locationInWindow, from: nil)
+
+        guard let idx = segmentIndex(at: location) else {
+            highlightSegment(at: nil)
+            return
+        }
+
+        if isDraggingSelectedSegment {
+            self.selectedSegmentIndex = idx
+        } else if idx != selectedSegmentIndex {
+            highlightSegment(at: idx)
+        } else {
+            highlightSegment(at: nil)
+        }
+    }
+
+    public override func mouseUp(with event: NSEvent) {
+        highlightSegment(at: nil)
+
+        if !isDraggingSelectedSegment {
+            let location = self.convert(event.locationInWindow, from: nil)
+            if let idx = segmentIndex(at: location) {
+                selectedSegmentIndex = idx
+            }
+        }
+
+        isDraggingSelectedSegment = false
     }
 
     /**
@@ -355,7 +409,26 @@ public class SegmentedControl: NSControl {
     }
 
     private func updateSelectionHighlightColor() {
-        selectionHighlight.backgroundColor = (tintColor ?? NSColor.controlColor).cgColor
+        // Ensure CGColor is appearance aware:
+        NSApp.withEffectiveAppearance {
+            selectionHighlight.backgroundColor = (tintColor ?? NSColor.controlColor).cgColor
+        }
+    }
+
+    private func segmentIndex(at point: CGPoint) -> Int? {
+        for (idx, segment) in segments.enumerated() {
+            let frame = segment.frame.insetBy(dx: -Metrics.edgeInset, dy: -Metrics.edgeInset)
+            if frame.contains(point) {
+                return idx
+            }
+        }
+        return nil
+    }
+
+    private func highlightSegment(at highlightIdx: Int?) {
+        for (idx, segment) in segments.enumerated() {
+            segment.isHighlighted = (idx == highlightIdx)
+        }
     }
 
 }
@@ -369,31 +442,49 @@ extension SegmentedControl {
 
         var title: String? {
             didSet {
-                updateAppearance()
+                if title != oldValue {
+                    updateAppearance()
+                }
             }
         }
 
         var image: NSImage? {
             didSet {
-                updateAppearance()
+                if image != oldValue {
+                    updateAppearance()
+                }
+            }
+        }
+
+        var isHighlighted = false {
+            didSet {
+                if isHighlighted != oldValue {
+                    updateAppearance()
+                }
             }
         }
 
         var isSelected = false {
             didSet {
-                updateAppearance()
+                if isSelected != oldValue {
+                    updateAppearance()
+                }
             }
         }
 
         var isMomentary = false {
             didSet {
-                updateAppearance()
+                if isMomentary != oldValue {
+                    updateAppearance()
+                }
             }
         }
 
         var tintColor: NSColor? {
             didSet {
-                updateAppearance()
+                if tintColor != oldValue {
+                    updateAppearance()
+                }
             }
         }
 
@@ -443,14 +534,25 @@ extension SegmentedControl {
                 textLayer.isHidden = false
                 textLayer.string = self.title
 
+                var foregroundColor: NSColor?
+
                 if isSelected && !isMomentary {
                     textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize, weight: .medium)
-                    textLayer.foregroundColor = (tintColor?.contrastingTextColor ?? NSColor.textColor).cgColor
+                    foregroundColor = tintColor?.contrastingTextColor
                 } else {
                     // Could use labelFont(ofSize:) here, but for consistency with the bold style,
                     // we are using systemFont(ofSize:).
                     textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize)
-                    textLayer.foregroundColor = NSColor.textColor.cgColor
+                }
+
+                if foregroundColor == nil {
+                    // systemGray works well in both aqua and dark appearance modes
+                    foregroundColor = isHighlighted ? .systemGray : .textColor
+                }
+
+                // Ensure CGColor is appearance aware:
+                NSApp.withEffectiveAppearance {
+                    textLayer.foregroundColor = foregroundColor?.cgColor
                 }
             }
         }
@@ -520,7 +622,10 @@ extension SegmentedControl {
         }
 
         func updateAppearance() {
-            sublayers?.first?.backgroundColor = NSColor.separatorColor.cgColor
+            // Ensure CGColor is appearance aware:
+            NSApp.withEffectiveAppearance {
+                sublayers?.first?.backgroundColor = NSColor.separatorColor.cgColor
+            }
         }
 
         override func layoutSublayers() {
