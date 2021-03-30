@@ -91,14 +91,10 @@ public class SegmentedControl: NSControl {
 
     private var segments: [SegmentLayer] {
         return segmentContainer.sublayers as? [SegmentLayer] ?? []
-        // let sublayers = segmentContainer.sublayers ?? []
-        // return sublayers.compactMap { $0 as? SegmentLayer }
     }
 
     private var separators: [SegmentSeparator] {
         return separatorContainer.sublayers as? [SegmentSeparator] ?? []
-        // let sublayers = separatorContainer.sublayers ?? []
-        // return sublayers.compactMap { $0 as? SegmentSeparator }
     }
 
     /**
@@ -118,14 +114,24 @@ public class SegmentedControl: NSControl {
         return layer
     }()
 
-    public override var fittingSize: NSSize {
-        // TODO
-        return super.fittingSize
-    }
-
     public override var intrinsicContentSize: NSSize {
-        // TODO
-        return super.intrinsicContentSize
+        guard count > 0 else {
+            return super.intrinsicContentSize
+        }
+
+        var size = CGSize(width: Metrics.edgeInset * 2 + Metrics.segmentPadding * CGFloat(count - 1),
+                          height: Metrics.standardHeight)
+
+        for segment in segments {
+            if segment.fixedWidth > 0 {
+                size.width += segment.fixedWidth
+            } else {
+                // intrinsicContentSize should accommodate all our segments:
+                size.width += segment.preferredFrameSize().width
+            }
+        }
+
+        return size
     }
 
     public override init(frame: CGRect) {
