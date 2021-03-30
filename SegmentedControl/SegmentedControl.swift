@@ -32,7 +32,7 @@ public class SegmentedControl: NSControl {
     private enum Metrics {
         static let standardHeight: CGFloat = 24
         static let cornerRadius: CGFloat = 6
-        static let edgeInset: CGFloat = 2
+        static let edgeInset: CGFloat = 1
         static let segmentPadding: CGFloat = 5
         static let separatorWidth: CGFloat = 1
     }
@@ -91,7 +91,7 @@ public class SegmentedControl: NSControl {
     private var selectionHighlight: CALayer = {
         let layer = CALayer()
         layer.cornerRadius = Metrics.cornerRadius - 1
-        layer.shadowOpacity = 0.2
+        layer.shadowOpacity = 0.1
         layer.shadowRadius = 3
         layer.shadowOffset = CGSize(width: 0, height: -3)
         return layer
@@ -363,7 +363,7 @@ extension SegmentedControl {
                 textLayer.foregroundColor = NSColor.textColor.cgColor
 
                 if isSelected {
-                    textLayer.font = NSFont.boldSystemFont(ofSize: textLayer.fontSize)
+                    textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize, weight: .medium)
                 } else {
                     // Could use labelFont(ofSize:) here, but for consistency with the bold style,
                     // we are using systemFont(ofSize:).
@@ -384,7 +384,7 @@ extension SegmentedControl {
             let textSize = string.size(withAttributes: [.font: font])
 
             var frame = bounds
-            frame.origin.y = (bounds.height - textSize.height) / 2
+            frame.origin.y = (bounds.height - textSize.height) / 2 + 1
             frame.size.height = textSize.height
             textLayer.frame = frame
         }
@@ -439,7 +439,7 @@ extension SegmentedControl {
         override func layoutSublayers() {
             super.layoutSublayers()
 
-            var frame = bounds.insetBy(dx: 0, dy: Metrics.edgeInset * 2)
+            var frame = bounds.insetBy(dx: 0, dy: floor(bounds.height * 0.2))
             frame.size.width = Metrics.separatorWidth
             frame.origin.x = (bounds.width - frame.size.width) / 2.0
             sublayers?.first?.frame = frame.rounded
