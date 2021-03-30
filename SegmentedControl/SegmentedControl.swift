@@ -71,6 +71,16 @@ public class SegmentedControl: NSControl {
         }
     }
 
+    public var isMomentary = false {
+        didSet {
+            for segment in segments {
+                segment.isMomentary = isMomentary
+            }
+            updateSeparators()
+            layoutSelectionHighlight()
+        }
+    }
+
     // Indicates whether the control attempts to adjust segment widths based on their content widths.
     //public var apportionsSegmentWidthsByContent = false
 
@@ -283,7 +293,7 @@ public class SegmentedControl: NSControl {
     }
 
     private func layoutSelectionHighlight() {
-        if let idx = selectedSegmentIndex {
+        if let idx = selectedSegmentIndex, !isMomentary {
             selectionHighlight.isHidden = false
             selectionHighlight.frame = segments[idx].frame
         } else {
@@ -303,7 +313,11 @@ public class SegmentedControl: NSControl {
         let count = self.count
 
         for (idx, separator) in self.separators.enumerated() {
-            separator.isHidden = (idx == count - 1 || idx == selectedIndex - 1 || idx == selectedIndex)
+            if isMomentary {
+                separator.isHidden = (idx == count - 1)
+            } else {
+                separator.isHidden = (idx == count - 1 || idx == selectedIndex - 1 || idx == selectedIndex)
+            }
         }
     }
 
@@ -333,6 +347,12 @@ extension SegmentedControl {
         }
 
         var isSelected = false {
+            didSet {
+                updateAppearance()
+            }
+        }
+
+        var isMomentary = false {
             didSet {
                 updateAppearance()
             }
@@ -385,7 +405,7 @@ extension SegmentedControl {
                 textLayer.string = self.title
                 textLayer.foregroundColor = NSColor.textColor.cgColor
 
-                if isSelected {
+                if isSelected && !isMomentary {
                     textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize, weight: .medium)
                 } else {
                     // Could use labelFont(ofSize:) here, but for consistency with the bold style,
