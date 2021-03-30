@@ -346,14 +346,14 @@ public class SegmentedControl: NSControl {
         var contentBounds = bounds.insetBy(dx: Metrics.edgeInset, dy: Metrics.edgeInset)
         contentBounds.size.width -= Metrics.segmentPadding * CGFloat(count - 1)
         var segmentWidth: CGFloat = 0
+        var unusedWidth: CGFloat = 0
 
         if fixedCount < count {
             let nonFixedCount = count - fixedCount
             if apportionsSegmentWidthsByContent {
                 // Increase section width if segments do not take up remaining flexibleWidth.
                 // This may be negative if available width will not accommodate all content.
-                let unusedWidth = contentBounds.size.width - contentWidth - fixedWidth
-                segmentWidth = unusedWidth / CGFloat(nonFixedCount)
+                unusedWidth = contentBounds.size.width - contentWidth - fixedWidth
             } else {
                 let flexibleWidth = contentBounds.size.width - fixedWidth
                 segmentWidth = max(0, flexibleWidth / CGFloat(nonFixedCount))
@@ -367,8 +367,9 @@ public class SegmentedControl: NSControl {
             if segment.fixedWidth > 0 {
                 frame.size.width = segment.fixedWidth
             } else if apportionsSegmentWidthsByContent {
-                // Any unused width is added via segmentWidth:
-                frame.size.width = segment.preferredFrameSize().width + segmentWidth
+                // Any unused width is added proportionally
+                let width = segment.preferredFrameSize().width
+                frame.size.width = width + unusedWidth * width / contentWidth
             } else {
                 frame.size.width = segmentWidth
             }
@@ -447,6 +448,13 @@ public class SegmentedControl: NSControl {
 
 extension SegmentedControl {
 
+    private class TextLayer: CATextLayer {
+
+        /// fontWeight is stored for reference only.
+        var fontWeight: NSFont.Weight = .regular
+
+    }
+
     /**
      * SegmentLayer handles the segment appearance.
      */
@@ -517,8 +525,8 @@ extension SegmentedControl {
             }
         }
 
-        private let textLayer: CATextLayer = {
-            let layer = CATextLayer()
+        private let textLayer: TextLayer = {
+            let layer = TextLayer()
             layer.fontSize = NSFont.systemFontSize
             layer.alignmentMode = .center
             layer.truncationMode = .end
@@ -588,10 +596,12 @@ extension SegmentedControl {
 
                 if isSelected && !isMomentary {
                     textLayer.font = NSFont.systemFont(ofSize: fontSize, weight: .medium)
+                    textLayer.fontWeight = .medium
                     // Text color should contrast with our tintColor (if any).
                     foregroundColor = tintColor?.contrastingTextColor
                 } else {
                     textLayer.font = NSFont.systemFont(ofSize: fontSize)
+                    textLayer.fontWeight = .regular
                 }
 
                 if foregroundColor == nil {
@@ -624,6 +634,10 @@ extension SegmentedControl {
             var frame = bounds
             frame.origin.y = (bounds.height - textSize.height) / 2 + 1
             frame.size.height = textSize.height
+            // Avoid text truncation from changing when toggling between medium and regular fonts
+            if textLayer.fontWeight == .regular {
+                frame.size.width -= 2
+            }
             textLayer.frame = frame
         }
 

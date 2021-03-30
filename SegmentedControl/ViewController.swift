@@ -25,7 +25,7 @@ class ViewController: NSViewController {
         proportionalControl?.insertSegment(title: "First", at: 0)
         proportionalControl?.insertSegment(title: "Second Title", at: 1)
         proportionalControl?.insertSegment(title: "Third", at: 2)
-        proportionalControl?.insertSegment(title: "Fourth Title", at: 3)
+        proportionalControl?.insertSegment(title: "Fourth Title is Long", at: 3)
 
         tintedControl?.insertSegment(title: "First", at: 0)
         tintedControl?.insertSegment(title: "Second", at: 1)
