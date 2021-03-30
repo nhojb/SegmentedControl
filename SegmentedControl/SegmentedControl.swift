@@ -468,6 +468,19 @@ extension SegmentedControl {
             }
         }
 
+        var tintColor: NSColor? {
+            didSet {
+                if tintColor != oldValue {
+                    needsAppearanceUpdate = true
+                }
+            }
+        }
+
+        /**
+         * Segment is auto-sized if width is zero. Otherwise the width is fixed.
+         */
+        var fixedWidth: CGFloat = 0.0
+
         var isHighlighted = false {
             didSet {
                 if isHighlighted != oldValue {
@@ -504,19 +517,6 @@ extension SegmentedControl {
             }
         }
 
-        var tintColor: NSColor? {
-            didSet {
-                if tintColor != oldValue {
-                    needsAppearanceUpdate = true
-                }
-            }
-        }
-
-        /**
-         * Segment is auto-sized if width is zero. Otherwise the width is fixed.
-         */
-        var fixedWidth: CGFloat = 0.0
-
         private let textLayer: CATextLayer = {
             let layer = CATextLayer()
             layer.fontSize = NSFont.systemFontSize
@@ -536,6 +536,20 @@ extension SegmentedControl {
         override init() {
             super.init()
             commonInit()
+        }
+
+        override init(layer: Any) {
+            super.init(layer: layer)
+            commonInit()
+
+            if let segment = layer as? SegmentLayer {
+                // initialize with other layer's properties
+                image = segment.image
+                title = segment.title
+                tintColor = segment.tintColor
+                isSelected = segment.isSelected
+                isMomentary = segment.isMomentary
+            }
         }
 
         required init?(coder aDecoder: NSCoder) {
@@ -640,6 +654,11 @@ extension SegmentedControl {
 
         override init() {
             super.init()
+            commonInit()
+        }
+
+        override init(layer: Any) {
+            super.init(layer: layer)
             commonInit()
         }
 
