@@ -67,6 +67,7 @@ public class SegmentedControl: NSControl {
     @IBInspectable
     public var tintColor: NSColor? {
         didSet {
+            updateSegments()
             updateSelectionHighlightColor()
         }
     }
@@ -74,9 +75,7 @@ public class SegmentedControl: NSControl {
     @IBInspectable
     public var isMomentary: Bool = false {
         didSet {
-            for segment in segments {
-                segment.isMomentary = isMomentary
-            }
+            updateSegments()
             updateSeparators()
             layoutSelectionHighlight()
         }
@@ -172,6 +171,8 @@ public class SegmentedControl: NSControl {
 
         let separator = SegmentSeparator()
         separatorContainer.insertSublayer(separator, at: UInt32(idx))
+
+        updateSegments()
         updateSeparators()
     }
 
@@ -327,6 +328,13 @@ public class SegmentedControl: NSControl {
         return frame
     }
 
+    private func updateSegments() {
+        for segment in segments {
+            segment.isMomentary = isMomentary
+            segment.tintColor = tintColor
+        }
+    }
+
     private func updateSeparators() {
         let selectedIndex = selectedSegmentIndex ?? NSNotFound
         let count = self.count
@@ -377,6 +385,12 @@ extension SegmentedControl {
             }
         }
 
+        var tintColor: NSColor? {
+            didSet {
+                updateAppearance()
+            }
+        }
+
         /**
          * Segment is auto-sized if width is zero. Otherwise the width is fixed.
          */
@@ -422,14 +436,15 @@ extension SegmentedControl {
                 contents = nil
                 textLayer.isHidden = false
                 textLayer.string = self.title
-                textLayer.foregroundColor = NSColor.textColor.cgColor
 
                 if isSelected && !isMomentary {
                     textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize, weight: .medium)
+                    textLayer.foregroundColor = (tintColor?.contrastingTextColor ?? NSColor.textColor).cgColor
                 } else {
                     // Could use labelFont(ofSize:) here, but for consistency with the bold style,
                     // we are using systemFont(ofSize:).
                     textLayer.font = NSFont.systemFont(ofSize: textLayer.fontSize)
+                    textLayer.foregroundColor = NSColor.textColor.cgColor
                 }
             }
         }
