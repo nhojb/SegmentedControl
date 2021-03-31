@@ -756,11 +756,17 @@ extension SegmentedControl {
             let textSize = string.size(withAttributes: [.font: font])
 
             var frame = bounds
-            frame.origin.y = (bounds.height - textSize.height) / 2 + 1
             frame.size.height = textSize.height
+
+            frame.origin.y = (bounds.height - textSize.height) / 2
+            if !isInset || textLayer == self.textLayer {
+                frame.origin.y += 1.0
+            } else {
+                frame.origin.y += 0.5
+            }
             // Avoid text truncation from changing when toggling between medium and regular fonts
             if textLayer == self.textLayer {
-                frame.size.width -= 2
+                frame = frame.insetBy(dx: 1, dy: 0)
             }
             textLayer.frame = frame
         }
