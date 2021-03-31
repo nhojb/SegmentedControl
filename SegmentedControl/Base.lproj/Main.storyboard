@@ -708,11 +708,11 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="SegmentedControl" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" wantsLayer="YES" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="389"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="428"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HBz-fp-yRi">
-                                <rect key="frame" x="151" y="335" width="179" height="24"/>
+                                <rect key="frame" x="151" y="374" width="179" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="NhP-0I-B9b">
                                     <font key="font" metaFont="system"/>
@@ -724,11 +724,14 @@
                                 </segmentedCell>
                             </segmentedControl>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1vc-Kg-2BE" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="153" y="229" width="175" height="24"/>
+                                <rect key="frame" x="153" y="268" width="175" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <action selector="defaultSegmentDidChange:" target="XfG-lQ-9wD" id="7Pz-sx-pTo"/>
+                                </connections>
                             </customView>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aaa-LA-FnI">
-                                <rect key="frame" x="344" y="224" width="75" height="32"/>
+                                <rect key="frame" x="344" y="263" width="75" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" title="Toggle" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ft4-35-zan">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -739,7 +742,7 @@
                                 </connections>
                             </button>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OPd-pl-pK8">
-                                <rect key="frame" x="56" y="233" width="48" height="16"/>
+                                <rect key="frame" x="56" y="272" width="48" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Default" id="BAR-ud-zxY">
                                     <font key="font" metaFont="system"/>
@@ -747,42 +750,8 @@
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K8j-Sd-BRT" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="153" y="169" width="307" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="apportionsSegmentWidthsByContent" value="YES"/>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xae-5O-Pad">
-                                <rect key="frame" x="25" y="173" width="79" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Proportional" id="NjF-bM-Yi0">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zjd-O7-EQM" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="153" y="107" width="175" height="24"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="tintColor">
-                                        <color key="value" name="controlAccentColor" catalog="System" colorSpace="catalog"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </customView>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QWC-kR-HRx">
-                                <rect key="frame" x="68" y="111" width="28" height="16"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Tint" id="wok-zx-WLY">
-                                    <font key="font" metaFont="system"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vFL-4r-7ce">
-                                <rect key="frame" x="151" y="292" width="263" height="24"/>
+                                <rect key="frame" x="151" y="331" width="263" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectOne" id="gq7-6M-V8o">
                                     <font key="font" metaFont="system"/>
@@ -794,14 +763,66 @@
                                     </segments>
                                 </segmentedCell>
                             </segmentedControl>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K8j-Sd-BRT" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
+                                <rect key="frame" x="153" y="162" width="259" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="apportionsSegmentWidthsByContent" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xae-5O-Pad">
+                                <rect key="frame" x="25" y="166" width="79" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Proportional" id="NjF-bM-Yi0">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zjd-O7-EQM" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
+                                <rect key="frame" x="153" y="100" width="175" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="tintColor">
+                                        <color key="value" name="controlAccentColor" catalog="System" colorSpace="catalog"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </customView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QWC-kR-HRx">
+                                <rect key="frame" x="68" y="104" width="28" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Tint" id="wok-zx-WLY">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                             <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KrX-yY-o8T" customClass="SegmentedControl" customModule="SegmentedControl" customModuleProvider="target">
-                                <rect key="frame" x="153" y="47" width="175" height="24"/>
+                                <rect key="frame" x="153" y="40" width="175" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                             </customView>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mhD-Xx-Krx">
-                                <rect key="frame" x="56" y="51" width="48" height="16"/>
+                                <rect key="frame" x="56" y="44" width="48" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Images" id="1ht-rH-GBg">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DWm-5g-Otg">
+                                <rect key="frame" x="153" y="223" width="136" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="No Selected Segment" id="JyY-aK-KHB">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zYW-M2-zFn">
+                                <rect key="frame" x="56" y="223" width="43" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Status" id="kcm-xQ-oBW">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -813,12 +834,13 @@
                         <outlet property="defaultControl" destination="1vc-Kg-2BE" id="PeO-ny-pWQ"/>
                         <outlet property="imageControl" destination="KrX-yY-o8T" id="I7E-gp-JDs"/>
                         <outlet property="proportionalControl" destination="K8j-Sd-BRT" id="cJe-MV-IN7"/>
+                        <outlet property="statusLabel" destination="DWm-5g-Otg" id="Z76-Ha-XSk"/>
                         <outlet property="tintedControl" destination="zjd-O7-EQM" id="30w-e4-X52"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="714.5"/>
+            <point key="canvasLocation" x="75" y="734"/>
         </scene>
     </scenes>
 </document>

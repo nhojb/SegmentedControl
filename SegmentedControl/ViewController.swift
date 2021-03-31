@@ -17,6 +17,8 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var imageControl: SegmentedControl?
 
+    @IBOutlet weak var statusLabel: NSTextField?
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +29,7 @@ class ViewController: NSViewController {
         proportionalControl?.insertSegment(title: "First", at: 0)
         proportionalControl?.insertSegment(title: "Second Title", at: 1)
         proportionalControl?.insertSegment(title: "Third", at: 2)
-        proportionalControl?.insertSegment(title: "Fourth Title is Long", at: 3)
+        proportionalControl?.insertSegment(title: "Fourth Title", at: 3)
 
         tintedControl?.insertSegment(title: "First", at: 0)
         tintedControl?.insertSegment(title: "Second", at: 1)
@@ -45,6 +47,19 @@ class ViewController: NSViewController {
         let nextIndex = selectedIndex < count - 1 ? selectedIndex + 1 : 0
 
         defaultControl?.setSelectedSegmentIndex(nextIndex, animated: true)
+
+        defaultSegmentDidChange(defaultControl)
+    }
+
+    @IBAction func defaultSegmentDidChange(_ sender: SegmentedControl?) {
+        let defaultText = "No Selected Segment"
+
+        if let segment = sender?.selectedSegmentIndex,
+           let title = sender?.titleForSegment(segment) {
+            self.statusLabel?.stringValue = "\(segment): \(title)"
+        } else {
+            self.statusLabel?.stringValue = defaultText
+        }
     }
 
 }

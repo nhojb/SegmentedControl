@@ -285,7 +285,10 @@ public class SegmentedControl: NSControl {
         }
 
         if isDraggingSelectedSegment {
-            selectedSegmentIndex = idx
+            if idx != selectedSegmentIndex {
+                selectedSegmentIndex = idx
+                sendAction(action, to: target)
+            }
         } else if idx != selectedSegmentIndex {
             highlightSegment(at: idx)
         } else {
@@ -298,8 +301,10 @@ public class SegmentedControl: NSControl {
 
         if !isDraggingSelectedSegment {
             let location = convert(event.locationInWindow, from: nil)
-            if let idx = segmentIndex(at: location) {
+            if let idx = segmentIndex(at: location),
+               idx != selectedSegmentIndex {
                 selectedSegmentIndex = idx
+                sendAction(action, to: target)
             }
         }
 
