@@ -16,6 +16,7 @@ public class SegmentedControl: NSControl {
         static let standardHeight: CGFloat = 24
         static let cornerRadius: CGFloat = 6
         static let edgeInset: CGFloat = 1
+        static let imageInset: CGFloat = 3
         static let segmentPadding: CGFloat = 5
         static let separatorWidth: CGFloat = 1
     }
@@ -658,7 +659,7 @@ extension SegmentedControl {
                 textLayer.isHidden = true
                 selectedTextLayer.isHidden = true
 
-                imageLayer.opacity = isHighlighted ? 0.5 : 1.0
+                imageLayer.opacity = isHighlighted ? 0.3 : 1.0
             } else {
                 imageLayer.contents = nil
                 imageLayer.isHidden = true
@@ -711,7 +712,7 @@ extension SegmentedControl {
         }
 
         private func layoutImageLayer() {
-            imageLayer.frame = bounds.insetBy(dx: 0, dy: Metrics.edgeInset * 2)
+            imageLayer.frame = bounds.insetBy(dx: 0, dy: Metrics.imageInset)
         }
 
         private func layoutTextLayer(_ textLayer: CATextLayer) {
