@@ -681,11 +681,11 @@ extension SegmentedControl {
         }
 
         override func preferredFrameSize() -> CGSize {
-            var size = CGSize(width: 0, height: superlayer?.bounds.size.height ?? 0)
+            var size = CGSize(width: 0, height: superlayer?.bounds.size.height ?? Metrics.standardHeight)
             if (fixedWidth > 0) {
                 size.width = fixedWidth
             } else if image != nil {
-                size = bounds.size
+                size.width = size.height * 2
             } else if let title = self.title,
                       let font = textLayer.font {
                 size.width = title.size(withAttributes: [.font: font]).width + Metrics.segmentPadding * 2
