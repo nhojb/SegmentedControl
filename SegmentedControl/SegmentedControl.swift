@@ -134,6 +134,12 @@ public class SegmentedControl: NSControl {
         }
     }
 
+    public override var isEnabled: Bool {
+        didSet {
+            layer?.opacity = isEnabled ? 1 : 0.5
+        }
+    }
+
     public override var intrinsicContentSize: NSSize {
         guard count > 0 else {
             return super.intrinsicContentSize
@@ -166,6 +172,7 @@ public class SegmentedControl: NSControl {
 
     private func commonInit() {
         wantsLayer = true
+        isEnabled = true
 
         layer?.cornerRadius = Metrics.cornerRadius
         layer?.borderColor = nil
@@ -299,6 +306,10 @@ public class SegmentedControl: NSControl {
     }
 
     public override func mouseDown(with event: NSEvent) {
+        guard isEnabled else {
+            return
+        }
+
         let location = convert(event.locationInWindow, from: nil)
 
         guard let idx = segmentIndex(at: location) else {
@@ -315,6 +326,10 @@ public class SegmentedControl: NSControl {
     }
 
     public override func mouseDragged(with event: NSEvent) {
+        guard isEnabled else {
+            return
+        }
+
         let location = convert(event.locationInWindow, from: nil)
 
         guard let idx = segmentIndex(at: location) else {
@@ -335,6 +350,10 @@ public class SegmentedControl: NSControl {
     }
 
     public override func mouseUp(with event: NSEvent) {
+        guard isEnabled else {
+            return
+        }
+
         highlightSegment(at: nil)
 
         if !isDraggingSelectedSegment {
