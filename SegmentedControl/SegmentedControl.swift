@@ -123,6 +123,8 @@ public class SegmentedControl: NSControl {
         return layer
     }()
 
+    private var mouseDownSegmentIndex: Int?
+
     private var isDraggingSelectedSegment = false {
         didSet {
             layoutSelectionHighlight()
@@ -303,7 +305,9 @@ public class SegmentedControl: NSControl {
             return
         }
 
-        if idx == selectedSegmentIndex {
+        mouseDownSegmentIndex = idx
+
+        if idx == selectedSegmentIndex, !isMomentary {
             isDraggingSelectedSegment = true
         } else {
             highlightSegment(at: idx)
@@ -323,7 +327,7 @@ public class SegmentedControl: NSControl {
                 selectedSegmentIndex = idx
                 sendAction(action, to: target)
             }
-        } else if idx != selectedSegmentIndex {
+        } else if isMomentary || idx != selectedSegmentIndex {
             highlightSegment(at: idx)
         } else {
             highlightSegment(at: nil)
@@ -335,14 +339,22 @@ public class SegmentedControl: NSControl {
 
         if !isDraggingSelectedSegment {
             let location = convert(event.locationInWindow, from: nil)
-            if let idx = segmentIndex(at: location),
-               idx != selectedSegmentIndex {
-                selectedSegmentIndex = idx
-                sendAction(action, to: target)
+            if let idx = segmentIndex(at: location) {
+                if isMomentary {
+                    // Only send action if mouse-up in the same segment
+                    if idx == mouseDownSegmentIndex {
+                        selectedSegmentIndex = idx
+                        sendAction(action, to: target)
+                    }
+                } else if idx != selectedSegmentIndex {
+                    selectedSegmentIndex = idx
+                    sendAction(action, to: target)
+                }
             }
         }
 
         isDraggingSelectedSegment = false
+        mouseDownSegmentIndex = nil
     }
 
     /**

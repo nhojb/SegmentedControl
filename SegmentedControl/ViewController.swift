@@ -17,6 +17,8 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var imageControl: SegmentedControl?
 
+    @IBOutlet weak var momentaryControl: SegmentedControl?
+
     @IBOutlet weak var statusLabel: NSTextField?
 
     override func viewDidLoad() {
@@ -39,6 +41,12 @@ class ViewController: NSViewController {
         imageControl?.insertSegment(image: NSImage(named: NSImage.iconViewTemplateName)!, at: 1)
         imageControl?.insertSegment(image: NSImage(named: NSImage.lockLockedTemplateName)!, at: 2)
         imageControl?.insertSegment(image: NSImage(named: NSImage.folderName)!, at: 3)
+
+        momentaryControl?.insertSegment(image: NSImage(named: NSImage.addTemplateName)!, at: 0)
+        momentaryControl?.insertSegment(image: NSImage(named: NSImage.actionTemplateName)!, at: 1)
+        momentaryControl?.insertSegment(image: NSImage(named: NSImage.bookmarksTemplateName)!, at: 2)
+        momentaryControl?.insertSegment(image: NSImage(named: NSImage.refreshTemplateName)!, at: 3)
+        momentaryControl?.insertSegment(title: "More", at: 4)
     }
 
     @IBAction func toggleSelectedIndex(_ sender: Any?) {
@@ -60,6 +68,10 @@ class ViewController: NSViewController {
         } else {
             self.statusLabel?.stringValue = defaultText
         }
+    }
+
+    @IBAction func momentaryControlAction(_ sender: SegmentedControl?) {
+        print("momentaryControlAction:", sender?.selectedSegmentIndex ?? "nil")
     }
 
 }
