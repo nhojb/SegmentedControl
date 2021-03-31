@@ -8,25 +8,8 @@
 import Cocoa
 
 /**
- * Requirements:
- *
- * Animated (layer backed)
- * Title per segment.
- * Support light & dark modes.
- * Compatible with Catalina 10.15.
- * No need for customisation (font etc).
- *
- * Optional:
- * Images
- * Tint colour
- *
- * Behaviour:
- * Mouse-down on unselected segment animates to/from gray.
- * Mouse-up in unselected segment moves selection (animated).
- * Mouse-down on selected segment "pushes" selection (button).
- * Mouse-drag on selected segment moves selection (animated).
+ * SegmentedControl: an AppKit segmented control based on UISegmentedControl.
  */
-
 public class SegmentedControl: NSControl {
 
     private enum Metrics {
@@ -48,6 +31,8 @@ public class SegmentedControl: NSControl {
      * Get or set the selected segment index.
      * Updates to selectedSegmentIndex are always animated, unless explicitly disabled.
      * Returns nil if no segment is selected.
+     *
+     * See also setSelectedSegmentIndex()
      */
     public var selectedSegmentIndex: Int? {
         get {
@@ -68,6 +53,9 @@ public class SegmentedControl: NSControl {
         }
     }
 
+    /**
+     * Custom tint color for the selected segment background.
+     */
     @IBInspectable
     public var tintColor: NSColor? {
         didSet {
@@ -78,6 +66,10 @@ public class SegmentedControl: NSControl {
         }
     }
 
+    /**
+     * If isMomentary is true then segments do not display selected state.
+     * Often used for toolbar items.
+     */
     @IBInspectable
     public var isMomentary: Bool = false {
         didSet {
@@ -89,13 +81,26 @@ public class SegmentedControl: NSControl {
         }
     }
 
-    // Indicates whether the control attempts to adjust segment widths based on their content widths.
+    /**
+     * Indicates whether the control adjusts segment widths based on their content widths.
+     */
     @IBInspectable
     public var apportionsSegmentWidthsByContent: Bool = false {
         didSet {
             needsLayout = true
         }
     }
+
+    /**
+     * segmentContainer contains our SegmentLayer layers.
+     * This layer sits above the control's layer, which contains the selectionHighlight.
+     */
+    private var segmentContainer = CALayer()
+
+    /**
+     * separatorContainer contains our SegmentSeparator layers.
+     */
+    private var separatorContainer = CALayer()
 
     private var segments: [SegmentLayer] {
         return segmentContainer.sublayers as? [SegmentLayer] ?? []
@@ -106,13 +111,8 @@ public class SegmentedControl: NSControl {
     }
 
     /**
-     * segmentContainer contains our SegmentLayer layers.
-     * This layer sits above the control's layer, which contains the selectionHighlight and separator items.
+     * selectionHighlight displays a button like background for the selected segment.
      */
-    private var segmentContainer = CALayer()
-
-    private var separatorContainer = CALayer()
-
     private var selectionHighlight: CALayer = {
         let layer = CALayer()
         layer.cornerRadius = Metrics.cornerRadius - 1
@@ -172,6 +172,9 @@ public class SegmentedControl: NSControl {
         layer?.addSublayer(separatorContainer)
     }
 
+    /**
+     * Set the selected segment, with or without animation.
+     */
     public func setSelectedSegmentIndex(_ idx: Int, animated: Bool) {
         guard idx != selectedSegmentIndex else {
             return
@@ -186,19 +189,21 @@ public class SegmentedControl: NSControl {
         }
     }
 
+    /**
+     * Insert a new segment with title at the specified index.
+     */
     public func insertSegment(title: String, at idx: Int) {
         insertSegment(at: idx).title = title
     }
 
+    /**
+     * Insert a new segment with image at the specified index.
+     */
     public func insertSegment(image: NSImage, at idx: Int) {
         insertSegment(at: idx).image = image
     }
 
     private func insertSegment(at idx: Int) -> SegmentLayer {
-        if idx < count {
-            removeSegment(at: idx)
-        }
-
         let segment = SegmentLayer()
         segment.isSelected = (count == 0)
         segmentContainer.insertSublayer(segment, at: UInt32(idx))
@@ -212,38 +217,66 @@ public class SegmentedControl: NSControl {
         return segment
     }
 
+    /**
+     * Remove the segment at the specified index.
+     */
     public func removeSegment(at idx: Int) {
         segmentContainer.sublayers?[idx].removeFromSuperlayer()
         separatorContainer.sublayers?[idx].removeFromSuperlayer()
         updateSeparators()
     }
 
+    /**
+     * Remove all segments.
+     */
     public func removeAllSegments() {
         segmentContainer.sublayers?.forEach { $0.removeFromSuperlayer() }
         separatorContainer.sublayers?.forEach { $0.removeFromSuperlayer() }
         selectionHighlight.isHidden = true
     }
 
+    /**
+     * Sets the title of the specified segment.
+     * Note that if an image is set on the segment, the title will not be displayed.
+     */
     public func setTitle(_ title: String?, forSegment idx: Int) {
         segments[idx].title = title
     }
 
+    /**
+     * Returns the title for the specified segment.
+     */
     public func titleForSegment(_ idx: Int) -> String? {
         return segments[idx].title
     }
 
+    /**
+     * Sets the image of the specified segment.
+     * Note that if an image is set on the segment, the title will not be displayed.
+     */
     public func setImage(_ image: NSImage?, forSegment idx: Int) {
         segments[idx].image = image
     }
 
+    /**
+     * Returns the image for the specified segment.
+     */
     public func imageForSegment(_ idx: Int) -> NSImage? {
         return segments[idx].image
     }
 
+    /**
+     * Set an explicit width for the specified segment.
+     * If width is > 0 then the segment width will be fixed to that width.
+     * Otherwise the segment width will auto-adjust.
+     */
     public func setWidth(_ width: CGFloat, forSegment idx: Int) {
         segments[idx].fixedWidth = width
     }
 
+    /**
+     * Returns the width for the specified segment.
+     */
     public func widthForSegment(_ idx: Int) -> CGFloat {
         return segments[idx].fixedWidth
     }
@@ -313,7 +346,7 @@ public class SegmentedControl: NSControl {
 
     /**
      * Note: Cocoa will set the correct (current) NSAppearance when calling updateLayer()
-     * This means we can obtain the NSColors.
+     * This means we can obtain the correct NSColors etc.
      */
     public override func updateLayer() {
         super.updateLayer()
@@ -468,6 +501,7 @@ extension SegmentedControl {
 
     /**
      * SegmentLayer handles the segment appearance.
+     * It supports display of a title or image.
      */
     private class SegmentLayer: CALayer {
 
@@ -500,6 +534,9 @@ extension SegmentedControl {
          */
         var fixedWidth: CGFloat = 0.0
 
+        /**
+         * Toggles the appearance of the title or image.
+         */
         var isHighlighted = false {
             didSet {
                 if isHighlighted != oldValue {
@@ -584,7 +621,7 @@ extension SegmentedControl {
             commonInit()
 
             if let segment = layer as? SegmentLayer {
-                // initialize with other layer's properties
+                // initialize our "persistent" properties with other layer's properties
                 image = segment.image
                 title = segment.title
                 tintColor = segment.tintColor
@@ -723,6 +760,9 @@ extension SegmentedControl {
 
 extension SegmentedControl {
 
+    /**
+     * SegmentSeparator handles the separator appearance.
+     */
     private class SegmentSeparator: CALayer {
 
         override init() {
@@ -757,6 +797,7 @@ extension SegmentedControl {
         override func layoutSublayers() {
             super.layoutSublayers()
 
+            // Vertical line with `Metrics.separatorWidth` (default 1px)
             var frame = bounds.insetBy(dx: 0, dy: floor(bounds.height * 0.2))
             frame.size.width = Metrics.separatorWidth
             frame.origin.x = (bounds.width - frame.size.width) / 2.0
