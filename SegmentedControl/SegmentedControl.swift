@@ -173,16 +173,16 @@ public class SegmentedControl: NSControl {
     }
 
     public func setSelectedSegmentIndex(_ idx: Int, animated: Bool) {
-        guard idx != self.selectedSegmentIndex else {
+        guard idx != selectedSegmentIndex else {
             return
         }
 
         if !animated {
             CATransaction.withoutAnimation {
-                self.selectedSegmentIndex = idx
+                selectedSegmentIndex = idx
             }
         } else {
-            self.selectedSegmentIndex = idx
+            selectedSegmentIndex = idx
         }
     }
 
@@ -200,7 +200,7 @@ public class SegmentedControl: NSControl {
         }
 
         let segment = SegmentLayer()
-        segment.isSelected = self.count == 0
+        segment.isSelected = (count == 0)
         segmentContainer.insertSublayer(segment, at: UInt32(idx))
 
         let separator = SegmentSeparator()
@@ -263,7 +263,7 @@ public class SegmentedControl: NSControl {
     }
 
     public override func mouseDown(with event: NSEvent) {
-        let location = self.convert(event.locationInWindow, from: nil)
+        let location = convert(event.locationInWindow, from: nil)
 
         guard let idx = segmentIndex(at: location) else {
             return
@@ -277,7 +277,7 @@ public class SegmentedControl: NSControl {
     }
 
     public override func mouseDragged(with event: NSEvent) {
-        let location = self.convert(event.locationInWindow, from: nil)
+        let location = convert(event.locationInWindow, from: nil)
 
         guard let idx = segmentIndex(at: location) else {
             highlightSegment(at: nil)
@@ -285,7 +285,7 @@ public class SegmentedControl: NSControl {
         }
 
         if isDraggingSelectedSegment {
-            self.selectedSegmentIndex = idx
+            selectedSegmentIndex = idx
         } else if idx != selectedSegmentIndex {
             highlightSegment(at: idx)
         } else {
@@ -297,7 +297,7 @@ public class SegmentedControl: NSControl {
         highlightSegment(at: nil)
 
         if !isDraggingSelectedSegment {
-            let location = self.convert(event.locationInWindow, from: nil)
+            let location = convert(event.locationInWindow, from: nil)
             if let idx = segmentIndex(at: location) {
                 selectedSegmentIndex = idx
             }
@@ -425,7 +425,7 @@ public class SegmentedControl: NSControl {
         let selectedIndex = selectedSegmentIndex ?? NSNotFound
         let count = self.count
 
-        for (idx, separator) in self.separators.enumerated() {
+        for (idx, separator) in separators.enumerated() {
             if isMomentary {
                 separator.isHidden = (idx == count - 1)
             } else {
@@ -603,7 +603,7 @@ extension SegmentedControl {
                 imageLayer.contents = nil
                 imageLayer.isHidden = true
                 textLayer.isHidden = false
-                textLayer.string = self.title
+                textLayer.string = title
 
                 var foregroundColor: NSColor?
 
