@@ -224,7 +224,7 @@ public class SegmentedControl: NSControl {
         selectionHighlight.isHidden = true
     }
 
-    public func setTitle(_ title: String, forSegment idx: Int) {
+    public func setTitle(_ title: String?, forSegment idx: Int) {
         segments[idx].title = title
     }
 
@@ -232,7 +232,7 @@ public class SegmentedControl: NSControl {
         return segments[idx].title
     }
 
-    public func setImage(_ image: NSImage, forSegment idx: Int) {
+    public func setImage(_ image: NSImage?, forSegment idx: Int) {
         segments[idx].image = image
     }
 
@@ -609,7 +609,14 @@ extension SegmentedControl {
             needsAppearanceUpdate = false
 
             if let image = self.image {
-                imageLayer.contents = image
+                if image.isTemplate {
+                    // Ensure that template images update with the effectiveAppearance
+                    NSApp.withEffectiveAppearance {
+                        imageLayer.contents = image.image(withTintColor: .textColor)
+                    }
+                } else {
+                    imageLayer.contents = image
+                }
                 imageLayer.isHidden = false
                 textLayer.isHidden = true
                 selectedTextLayer.isHidden = true

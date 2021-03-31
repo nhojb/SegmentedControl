@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52185C7626147B2100F11C05 /* NSImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52185C7526147B2100F11C05 /* NSImage.swift */; };
 		5242F3D626131FFE00E305E4 /* CATransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5242F3D526131FFE00E305E4 /* CATransaction.swift */; };
 		5242F3DE26133DC600E305E4 /* NSColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5242F3DD26133DC600E305E4 /* NSColor.swift */; };
 		5242F3E626135D7500E305E4 /* NSApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5242F3E526135D7500E305E4 /* NSApplication.swift */; };
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		52185C7526147B2100F11C05 /* NSImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSImage.swift; sourceTree = "<group>"; };
 		5242F3D526131FFE00E305E4 /* CATransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CATransaction.swift; sourceTree = "<group>"; };
 		5242F3DD26133DC600E305E4 /* NSColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSColor.swift; sourceTree = "<group>"; };
 		5242F3E526135D7500E305E4 /* NSApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplication.swift; sourceTree = "<group>"; };
@@ -69,6 +71,7 @@
 				5242F3D526131FFE00E305E4 /* CATransaction.swift */,
 				5242F3E526135D7500E305E4 /* NSApplication.swift */,
 				5242F3DD26133DC600E305E4 /* NSColor.swift */,
+				52185C7526147B2100F11C05 /* NSImage.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				5242F3D626131FFE00E305E4 /* CATransaction.swift in Sources */,
 				5242F3DE26133DC600E305E4 /* NSColor.swift in Sources */,
 				52FB371F260E1FD700F74B75 /* ViewController.swift in Sources */,
+				52185C7626147B2100F11C05 /* NSImage.swift in Sources */,
 				52FB374C260E200100F74B75 /* SegmentedControl.swift in Sources */,
 				52FB371D260E1FD700F74B75 /* AppDelegate.swift in Sources */,
 			);
