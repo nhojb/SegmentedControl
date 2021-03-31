@@ -466,13 +466,6 @@ public class SegmentedControl: NSControl {
 
 extension SegmentedControl {
 
-    private class TextLayer: CATextLayer {
-
-        /// fontWeight is stored for reference only.
-        var fontWeight: NSFont.Weight = .regular
-
-    }
-
     /**
      * SegmentLayer handles the segment appearance.
      */
@@ -549,9 +542,25 @@ extension SegmentedControl {
             return layer
         }()
 
-        private let textLayer: TextLayer = {
-            let layer = TextLayer()
+        /**
+         * CATextLayer does not handle transitions between fonts very well.
+         * So to avoid visual glitches when switching between our selected state,
+         * we use two separate text layers, one for each state.
+         * We can then easily fade between text layers.
+         */
+        private let textLayer: CATextLayer = {
+            let layer = CATextLayer()
             layer.fontSize = NSFont.systemFontSize
+            layer.font = NSFont.systemFont(ofSize: layer.fontSize) // regular
+            layer.alignmentMode = .center
+            layer.truncationMode = .end
+            return layer
+        }()
+
+        private let selectedTextLayer: CATextLayer = {
+            let layer = CATextLayer()
+            layer.fontSize = NSFont.systemFontSize
+            layer.font = NSFont.systemFont(ofSize: layer.fontSize, weight: .medium)
             layer.alignmentMode = .center
             layer.truncationMode = .end
             return layer
@@ -592,6 +601,7 @@ extension SegmentedControl {
         private func commonInit() {
             addSublayer(imageLayer)
             addSublayer(textLayer)
+            addSublayer(selectedTextLayer)
             updateAppearance()
         }
 
@@ -602,42 +612,42 @@ extension SegmentedControl {
                 imageLayer.contents = image
                 imageLayer.isHidden = false
                 textLayer.isHidden = true
+                selectedTextLayer.isHidden = true
 
                 imageLayer.opacity = isHighlighted ? 0.5 : 1.0
             } else {
                 imageLayer.contents = nil
                 imageLayer.isHidden = true
+
                 textLayer.isHidden = false
                 textLayer.string = title
-
-                var foregroundColor: NSColor?
-
-                // Adjusting the fontSize when the segment is "inset", gives a nice little "push" effect.
-                // Note that there is no need to update the textLayer's fontSize property.
-                var fontSize = NSFont.systemFontSize
-                if isInset && isSelected {
-                    fontSize -= 0.5
-                }
-
-                if isSelected && !isMomentary {
-                    textLayer.font = NSFont.systemFont(ofSize: fontSize, weight: .medium)
-                    textLayer.fontWeight = .medium
-                    // Text color should contrast with our tintColor (if any).
-                    foregroundColor = tintColor?.contrastingTextColor
-                } else {
-                    textLayer.font = NSFont.systemFont(ofSize: fontSize)
-                    textLayer.fontWeight = .regular
-                }
-
-                if foregroundColor == nil {
-                    // systemGray works well in both aqua and dark appearance modes
-                    foregroundColor = isHighlighted ? .systemGray : .textColor
-                }
+                selectedTextLayer.isHidden = false
+                selectedTextLayer.string = title
 
                 // Ensure CGColor is appearance aware:
                 NSApp.withEffectiveAppearance {
-                    textLayer.foregroundColor = foregroundColor?.cgColor
+                    updateTitleAppearance()
                 }
+            }
+        }
+
+        private func updateTitleAppearance() {
+            if isSelected && !isMomentary {
+                textLayer.opacity = 0
+                selectedTextLayer.opacity = 1
+                selectedTextLayer.foregroundColor = (tintColor?.contrastingTextColor ?? .textColor).cgColor
+
+                // Adjusting the fontSize when the segment is "inset", gives a nice little "push" effect.
+                var fontSize = NSFont.systemFontSize
+                if isInset {
+                    fontSize -= 0.5
+                }
+                selectedTextLayer.fontSize = fontSize
+            } else {
+                selectedTextLayer.opacity = 0
+                textLayer.opacity = 1
+                // systemGray works well in both aqua and dark appearance modes
+                textLayer.foregroundColor = (isHighlighted ? NSColor.systemGray : NSColor.textColor).cgColor
             }
         }
 
@@ -651,7 +661,8 @@ extension SegmentedControl {
             if !imageLayer.isHidden {
                 layoutImageLayer()
             } else {
-                layoutTextLayer()
+                layoutTextLayer(textLayer)
+                layoutTextLayer(selectedTextLayer)
             }
         }
 
@@ -659,7 +670,7 @@ extension SegmentedControl {
             imageLayer.frame = bounds.insetBy(dx: 0, dy: Metrics.edgeInset * 2)
         }
 
-        private func layoutTextLayer() {
+        private func layoutTextLayer(_ textLayer: CATextLayer) {
             guard let font = textLayer.font,
                   let string = textLayer.string as? NSString,
                   string.length > 0 else {
@@ -672,7 +683,7 @@ extension SegmentedControl {
             frame.origin.y = (bounds.height - textSize.height) / 2 + 1
             frame.size.height = textSize.height
             // Avoid text truncation from changing when toggling between medium and regular fonts
-            if textLayer.fontWeight == .regular {
+            if textLayer == self.textLayer {
                 frame.size.width -= 2
             }
             textLayer.frame = frame
@@ -682,6 +693,7 @@ extension SegmentedControl {
             didSet {
                 imageLayer.contentsScale = contentsScale
                 textLayer.contentsScale = contentsScale
+                selectedTextLayer.contentsScale = contentsScale
             }
         }
 
